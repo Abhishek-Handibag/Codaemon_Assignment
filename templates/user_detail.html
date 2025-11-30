@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details - Audio Manager</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .back-btn {
+            display: inline-block;
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            transition: background 0.3s;
+        }
+
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .user-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .user-detail-item {
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .user-detail-item strong {
+            color: #667eea;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .upload-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: #e9ecef;
+        }
+
+        .file-name {
+            margin-top: 10px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .audio-list {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .audio-list h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .audio-item {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.2s;
+        }
+
+        .audio-item:hover {
+            transform: translateX(5px);
+        }
+
+        .audio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .audio-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .audio-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .audio-player {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .audio-controls {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-small:hover {
+            background: #5568d3;
+        }
+
+        .btn-danger {
+            background: #ff6b6b;
+        }
+
+        .btn-danger:hover {
+            background: #ff5252;
+        }
+
+        .btn-success {
+            background: #51cf66;
+        }
+
+        .btn-success:hover {
+            background: #40c057;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .success {
+            background: #51cf66;
+            color: white;
+        }
+
+        .error {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.5rem;
+            padding: 50px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+        }
+
+        .empty-state svg {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+        }
+
+        @media (max-width: 768px) {
+            .audio-header {
+                flex-direction: column;
+            }
+
+            .audio-controls {
+                width: 100%;
+            }
+
+            .btn-small {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-btn">← Back to Users</a>
+
+        <div id="userHeader" class="loading">Loading user details...</div>
+
+        <div class="upload-section">
+            <h2>📤 Upload Audio File</h2>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="title">Title *</label>
+                    <input type="text" id="title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Audio File * (MP3, WAV, OGG, M4A, FLAC)</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="audio_file" name="audio_file" accept="audio/*" required>
+                        <label for="audio_file" class="file-input-label">
+                            📁 Click to select audio file
+                        </label>
+                    </div>
+                    <div id="fileName" class="file-name"></div>
+                </div>
+                <button type="submit" class="btn" id="uploadBtn">Upload Audio</button>
+            </form>
+        </div>
+
+        <div id="message"></div>
+
+        <div class="audio-list">
+            <h2>🎵 Audio Files</h2>
+            <div id="audioList" class="loading">Loading audio files...</div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Audio File</h2>
+                <button class="modal-close" onclick="closeEditModal()">×</button>
+            </div>
+            <form id="editForm">
+                <input type="hidden" id="edit_audio_id">
+                <div class="form-group">
+                    <label for="edit_title">Title *</label>
+                    <input type="text" id="edit_title" name="title" required>
+                </div>
+                <div class="form-group">
+                    <label for="edit_description">Description</label>
+                    <textarea id="edit_description" name="description" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Replace Audio File (Optional)</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="edit_audio_file" name="audio_file" accept="audio/*">
+                        <label for="edit_audio_file" class="file-input-label">
+                            📁 Click to replace audio file
+                        </label>
+                    </div>
+                    <div id="editFileName" class="file-name"></div>
+                </div>
+                <button type="submit" class="btn">Update Audio</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = '/api';
+        let currentUserId = null;
+
+        // Get user ID from URL
+        const pathParts = window.location.pathname.split('/');
+        currentUserId = pathParts[pathParts.length - 2];
+
+        // Load data on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            loadUserDetails();
+            loadAudioFiles();
+        });
+
+        // File input display
+        document.getElementById('audio_file').addEventListener('change', (e) => {
+            const fileName = e.target.files[0]?.name || '';
+            document.getElementById('fileName').textContent = fileName ? `Selected: ${fileName}` : '';
+        });
+
+        document.getElementById('edit_audio_file').addEventListener('change', (e) => {
+            const fileName = e.target.files[0]?.name || '';
+            document.getElementById('editFileName').textContent = fileName ? `Selected: ${fileName}` : '';
+        });
+
+        // Handle upload form submission
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const uploadBtn = document.getElementById('uploadBtn');
+            uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Uploading...';
+
+            const formData = new FormData();
+            formData.append('user_id', currentUserId);
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('audio_file', document.getElementById('audio_file').files[0]);
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/audio/`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showMessage('Audio file uploaded successfully!', 'success');
+                    document.getElementById('uploadForm').reset();
+                    document.getElementById('fileName').textContent = '';
+                    loadAudioFiles();
+                } else {
+                    const error = await response.json();
+                    showMessage('Error: ' + JSON.stringify(error), 'error');
+                }
+            } catch (error) {
+                showMessage('Network error: ' + error.message, 'error');
+            } finally {
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Upload Audio';
+            }
+        });
+
+        // Handle edit form submission
+        document.getElementById('editForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const audioId = document.getElementById('edit_audio_id').value;
+            const formData = new FormData();
+            formData.append('title', document.getElementById('edit_title').value);
+            formData.append('description', document.getElementById('edit_description').value);
+            
+            const audioFile = document.getElementById('edit_audio_file').files[0];
+            if (audioFile) {
+                formData.append('audio_file', audioFile);
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/audio/${audioId}/`, {
+                    method: 'PATCH',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    showMessage('Audio file updated successfully!', 'success');
+                    closeEditModal();
+                    loadAudioFiles();
+                } else {
+                    const error = await response.json();
+                    showMessage('Error: ' + JSON.stringify(error), 'error');
+                }
+            } catch (error) {
+                showMessage('Network error: ' + error.message, 'error');
+            }
+        });
+
+        async function loadUserDetails() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/users/${currentUserId}/`);
+                const user = await response.json();
+                displayUserDetails(user);
+            } catch (error) {
+                document.getElementById('userHeader').innerHTML = 
+                    '<div class="error">Failed to load user details: ' + error.message + '</div>';
+            }
+        }
+
+        function displayUserDetails(user) {
+            document.getElementById('userHeader').className = 'header';
+            document.getElementById('userHeader').innerHTML = `
+                <h1>👤 ${user.username}</h1>
+                <div class="user-details">
+                    <div class="user-detail-item">
+                        <strong>Email</strong>
+                        ${user.email}
+                    </div>
+                    <div class="user-detail-item">
+                        <strong>Name</strong>
+                        ${user.first_name} ${user.last_name}
+                    </div>
+                    ${user.phone ? `
+                    <div class="user-detail-item">
+                        <strong>Phone</strong>
+                        ${user.phone}
+                    </div>
+                    ` : ''}
+                    ${user.bio ? `
+                    <div class="user-detail-item">
+                        <strong>Bio</strong>
+                        ${user.bio}
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        async function loadAudioFiles() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/audio/?user_id=${currentUserId}`);
+                const audioFiles = await response.json();
+                displayAudioFiles(audioFiles);
+            } catch (error) {
+                document.getElementById('audioList').innerHTML = 
+                    '<div class="error">Failed to load audio files: ' + error.message + '</div>';
+            }
+        }
+
+        function displayAudioFiles(audioFiles) {
+            const container = document.getElementById('audioList');
+            
+            if (audioFiles.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No audio files uploaded yet.</p>
+                        <p>Upload your first audio file using the form above!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = audioFiles.map(audio => `
+                <div class="audio-item">
+                    <div class="audio-header">
+                        <div>
+                            <div class="audio-title">${audio.title}</div>
+                            ${audio.description ? `<p style="color: #666; margin-top: 5px;">${audio.description}</p>` : ''}
+                        </div>
+                    </div>
+                    <div class="audio-meta">
+                        <span>📦 ${audio.file_size_display}</span>
+                        <span>📅 ${new Date(audio.uploaded_at).toLocaleDateString()}</span>
+                    </div>
+                    <audio class="audio-player" controls>
+                        <source src="${audio.audio_url}" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <div class="audio-controls">
+                        <button class="btn-small" onclick="editAudio(${audio.id})">✏️ Edit</button>
+                        <button class="btn-small btn-danger" onclick="deleteAudio(${audio.id})">🗑️ Delete</button>
+                        <a href="${audio.audio_url}" download class="btn-small btn-success" style="text-decoration: none; display: inline-block;">⬇️ Download</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function editAudio(audioId) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/audio/${audioId}/`);
+                const audio = await response.json();
+                
+                document.getElementById('edit_audio_id').value = audio.id;
+                document.getElementById('edit_title').value = audio.title;
+                document.getElementById('edit_description').value = audio.description || '';
+                document.getElementById('editFileName').textContent = '';
+                
+                document.getElementById('editModal').classList.add('active');
+            } catch (error) {
+                showMessage('Error loading audio details: ' + error.message, 'error');
+            }
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.remove('active');
+            document.getElementById('editForm').reset();
+        }
+
+        async function deleteAudio(audioId) {
+            if (!confirm('Are you sure you want to delete this audio file?')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/audio/${audioId}/`, {
+                    method: 'DELETE'
+                });
+
+                if (response.ok) {
+                    showMessage('Audio file deleted successfully!', 'success');
+                    loadAudioFiles();
+                } else {
+                    showMessage('Error deleting audio file', 'error');
+                }
+            } catch (error) {
+                showMessage('Network error: ' + error.message, 'error');
+            }
+        }
+
+        function showMessage(message, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.className = `message ${type}`;
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target === modal) {
+                closeEditModal();
+            }
+        }
+    </script>
+</body>
+</html>
