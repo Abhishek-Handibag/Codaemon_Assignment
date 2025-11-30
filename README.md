@@ -406,8 +406,3 @@ python manage.py check_audio --activate
 ```
 
 This issue occurs when audio files are soft-deleted (set to inactive). The command above will help identify and fix the issue.
-
-
-## 👤 Author
-
-Abhishek Handibag
